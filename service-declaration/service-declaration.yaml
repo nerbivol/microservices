@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-declaration
+spec:
+  selector:
+    app: service-declaration
+  type: NodePort
+  ports:
+    - name: http
+      port: 8082
+      nodePort: 30002
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-declaration
+spec:
+  selector:
+    matchLabels:
+      app: service-declaration
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-declaration
+    spec:
+      containers:
+        - name: server
+          image: nerbivol/service-declaration:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8082
+
+---

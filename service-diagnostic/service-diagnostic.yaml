@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-diagnostic
+spec:
+  selector:
+    app: service-diagnostic
+  type: NodePort
+  ports:
+    - name: http
+      port: 8084
+      nodePort: 30004
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-diagnostic
+spec:
+  selector:
+    matchLabels:
+      app: service-diagnostic
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-diagnostic
+    spec:
+      containers:
+        - name: server
+          image: nerbivol/service-diagnostic:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8084
+
+---
